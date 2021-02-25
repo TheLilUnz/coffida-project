@@ -1,23 +1,26 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, {Component} from 'react';
 import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Home from './components/home';
 import Locations from './components/locations';
 import User from './components/user';
+import Login from './components/login';
+import Signup from './components/signup';
 
-import { SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, BackHandler, TabBarIOS,} from 'react-native';
+import { SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, BackHandler, FlatList, ActivityIndicator } from 'react-native';
 
-import { Header, LearnMoreLinks, Colors, DebugInstructions, ReloadInstructions,} from 'react-native/Libraries/NewAppScreen';
+import { Header, LearnMoreLinks, Colors, DebugInstructions, ReloadInstructions } from 'react-native/Libraries/NewAppScreen';
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-const App = () => {
-  return (
-    <NavigationContainer>
-      <Tab.Navigator
+function HomeTabs() {
+  return(
+    <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
@@ -42,9 +45,24 @@ const App = () => {
         <Tab.Screen name="Locations" component={Locations} />
         <Tab.Screen name="User" component={User} />
       </Tab.Navigator>
+  );
+}
+
+class App extends Component {
+  render(){
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeTabs} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Signup" component={Signup} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
+      }
 };
+
+
 
 const styles = StyleSheet.create({
   scrollView: {

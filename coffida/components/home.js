@@ -1,13 +1,17 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import ASyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Home = (props) => {
+class Home extends Component {
 
-    return(
-        <View style={styles.container}>
-            <Text style={styles.text}>Home</Text>
-        </View>
-    );
+    render(){
+        return(
+            <View style={styles.container}>
+                <Text style={styles.text}>Home</Text>
+            </View>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
