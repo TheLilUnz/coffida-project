@@ -74,7 +74,7 @@ class User extends Component {
                     <TouchableOpacity
                     style={styles.button}
                     onPress={() => this.logout()}>
-                        <Text>Log out</Text>
+                        <Text style={styles.buttonText}>Log out</Text>
                     </TouchableOpacity>
                 </View>
             );
@@ -86,12 +86,12 @@ class User extends Component {
                 <TouchableOpacity
                 style={styles.button}
                 onPress={() => this.logout()}>
-                    <Text>Log out</Text>
+                    <Text style={styles.buttonText}>Log out</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                 style={styles.button}
                 onPress={() => this.props.navigation.navigate("Update")}>
-                    <Text>Edit Account</Text>
+                    <Text style={styles.buttonText}>Edit Account</Text>
                 </TouchableOpacity>
             </View>
              )
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'mintcream'
+        backgroundColor: 'navajowhite'
     },
     title:{
         color: 'black',

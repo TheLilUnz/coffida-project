@@ -36,7 +36,9 @@ class UpdateUser extends Component {
                 throw 'Not logged in';
             }else if(response.status === 403){
                 throw 'Forbidden'
-            }else{
+            }else if(response.status === 404){
+                throw 'Account not found';
+            } else{
                 throw 'Something went wrong';
             }
         })
@@ -86,7 +88,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'wheat'
+        backgroundColor: 'navajowhite'
     },
     title:{
         color: 'black',

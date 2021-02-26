@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     },
     locationContainer:{
         width:300,
-        borderColor: 'black',
+        borderColor: 'sienna',
         borderWidth: 1,
         padding: 1
     },

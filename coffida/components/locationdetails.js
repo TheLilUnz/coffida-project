@@ -54,7 +54,6 @@ class LocationDetails extends Component {
                 isLoading: false,
                 listData: responseJson,
             })
-            //this.getReviews(this.state.listData);
         })
         .catch((error) => {
             console.log(error);
@@ -62,9 +61,117 @@ class LocationDetails extends Component {
         })
     }
 
-    // getReviews = (listData) => {
-        
-    // }
+    favouriteLocation = async () => {
+        const value = await AsyncStorage.getItem('@session_token');
+        const locationId = this.state.locationId;
+        return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + locationId + "/favourite", {
+            method:'post',
+            headers: {
+                'X-Authorization': value
+            },
+        })
+        .then((response) => {
+            if(response.status === 200){
+                ToastAndroid.show("Added to favourites!", ToastAndroid.SHORT);
+            }else if(response.status === 400){
+                throw 'Failed validation';
+            }else if(response.status === 401){
+                throw 'Not logged in';
+            }else if(response.status === 404){
+                throw 'Location not found';
+            } else{
+                throw 'Something went wrong';
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            ToastAndroid.show(error, ToastAndroid.SHORT);
+        })
+    }
+
+    unfavouriteLocation = async () => {
+        const value = await AsyncStorage.getItem('@session_token');
+        const locationId = this.state.locationId;
+        return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + locationId + "/favourite", {
+            method:'delete',
+            headers: {
+                'X-Authorization': value
+            },
+        })
+        .then((response) => {
+            if(response.status === 200){
+                ToastAndroid.show("Removed from favourites!", ToastAndroid.SHORT);
+            }else if(response.status === 400){
+                throw 'Failed validation';
+            }else if(response.status === 401){
+                throw 'Not logged in';
+            }else if(response.status === 404){
+                throw 'Location not found';
+            } else{
+                throw 'Something went wrong';
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            ToastAndroid.show(error, ToastAndroid.SHORT);
+        })
+    }
+
+    addLike = async (reviewId) => {
+        const value = await AsyncStorage.getItem('@session_token');
+        const locationId = this.state.locationId;
+        return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + locationId + "/review/" + reviewId + "/like", {
+            method:'post',
+            headers: {
+                'X-Authorization': value
+            },
+        })
+        .then((response) => {
+            if(response.status === 200){
+                ToastAndroid.show("Like added!", ToastAndroid.SHORT);
+            }else if(response.status === 400){
+                throw 'Failed validation';
+            }else if(response.status === 401){
+                throw 'Not logged in';
+            }else if(response.status === 404){
+                throw 'Review not found';
+            } else{
+                throw 'Something went wrong';
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            ToastAndroid.show(error, ToastAndroid.SHORT);
+        })
+    }
+
+    removeLike = async (reviewId) => {
+        const value = await AsyncStorage.getItem('@session_token');
+        const locationId = this.state.locationId;
+        return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + locationId + "/review/" + reviewId + "/like", {
+            method:'delete',
+            headers: {
+                'X-Authorization': value
+            },
+        })
+        .then((response) => {
+            if(response.status === 200){
+                ToastAndroid.show("Like removed!", ToastAndroid.SHORT);
+            }else if(response.status === 400){
+                throw 'Failed validation';
+            }else if(response.status === 401){
+                throw 'Not logged in';
+            }else if(response.status === 404){
+                throw 'Review not found';
+            } else{
+                throw 'Something went wrong';
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            ToastAndroid.show(error, ToastAndroid.SHORT);
+        })
+    }
 
     render(){
         if(this.state.isLoading){
@@ -77,6 +184,18 @@ class LocationDetails extends Component {
             return(
                 <View style={styles.container}>
                     <Text style={styles.title}>{this.state.listData.location_name}</Text>
+                    <View style={styles.row}>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => this.favouriteLocation()}>
+                            <Text style={styles.buttonText}>Favourite</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => this.unfavouriteLocation()}>
+                            <Text style={styles.buttonText}>Unfavourite</Text>
+                        </TouchableOpacity>
+                    </View>
                     <View style={styles.row}>
                         <Text style={styles.text}>Town: </Text>
                         <Text style={styles.rating}>{this.state.listData.location_town}</Text>
@@ -97,6 +216,53 @@ class LocationDetails extends Component {
                         <Text style={styles.text}>Average Cleanliness Rating: </Text>
                         <Text style={styles.rating}>{this.state.listData.avg_clenliness_rating}/5</Text>
                     </View>
+                    <FlatList
+                        data={this.state.listData.location_reviews}
+                        renderItem={({item}) => (
+                            <View style={styles.locationContainer}>
+                                <Text style={styles.title}>Review</Text>
+                                <View style={styles.row}>
+                                    <Text style={styles.text}>Overall Rating: </Text>
+                                    <Text style={styles.rating}>{item.overall_rating}/5</Text>
+                                </View>
+                                <View style={styles.row}>
+                                    <Text style={styles.text}>Price Rating: </Text>
+                                    <Text style={styles.rating}>{item.price_rating}/5</Text>
+                                </View>
+                                <View style={styles.row}>
+                                    <Text style={styles.text}>Quality Rating: </Text>
+                                    <Text style={styles.rating}>{item.quality_rating}/5</Text>
+                                </View>
+                                <View style={styles.row}>
+                                    <Text style={styles.text}>Cleanliness Rating: </Text>
+                                    <Text style={styles.rating}>{item.clenliness_rating}/5</Text>
+                                </View>
+                                <View style={styles.row}>
+                                    <Text style={styles.text}>{item.review_body}</Text>
+                                </View>
+                                <View style={styles.row}>
+                                    <Text style={styles.text}>Likes: </Text>
+                                    <Text style={styles.rating}>{item.likes}</Text>
+                                </View>
+                                <View style={styles.row}>
+                                <TouchableOpacity
+                                  style={styles.button}
+                                   onPress={() => this.addLike(item.review_id)}>
+                                  <Text style={styles.buttonText}>Like</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                  style={styles.button}
+                                   onPress={() => this.removeLike(item.review_id)}>
+                                  <Text style={styles.buttonText}>Disike</Text>
+                                </TouchableOpacity>
+                                </View>
+                            </View>
+                        )}></FlatList>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => this.removeLike(item.review_id)}>
+                        <Text style={styles.buttonText}>Leave Review</Text>
+                    </TouchableOpacity>
                 </View>
             );
         }
@@ -116,7 +282,7 @@ const styles = StyleSheet.create({
     },
     locationContainer:{
         width:300,
-        borderColor: 'black',
+        borderColor: 'sienna',
         borderWidth: 1,
         padding: 1
     },
