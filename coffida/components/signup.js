@@ -74,7 +74,7 @@ class Signup extends Component {
                     <Text style={styles.buttonText}>Sign Up!</Text>
                 </TouchableOpacity>
             </View>
-        );
+        )
     }
 }
 

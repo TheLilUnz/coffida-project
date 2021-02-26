@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class Home extends Component {
 

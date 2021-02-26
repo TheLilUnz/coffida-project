@@ -173,6 +173,12 @@ class LocationDetails extends Component {
         })
     }
 
+    leaveReview = async (locationId) => {
+        console.log("reviewing " + locationId);
+        AsyncStorage.setItem('@locationId', JSON.stringify(locationId));
+        this.props.navigation.navigate("Review");
+    }
+
     render(){
         if(this.state.isLoading){
             return(
@@ -260,7 +266,7 @@ class LocationDetails extends Component {
                         )}></FlatList>
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={() => this.removeLike(item.review_id)}>
+                        onPress={() => this.leaveReview(this.state.listData.location_id)}>
                         <Text style={styles.buttonText}>Leave Review</Text>
                     </TouchableOpacity>
                 </View>
@@ -282,7 +288,7 @@ const styles = StyleSheet.create({
     },
     locationContainer:{
         width:300,
-        borderColor: 'sienna',
+        borderColor: 'black',
         borderWidth: 1,
         padding: 1
     },

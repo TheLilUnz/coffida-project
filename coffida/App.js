@@ -12,6 +12,8 @@ import Login from './components/login';
 import Signup from './components/signup';
 import LocationDetails from './components/locationdetails';
 import UpdateUser from './components/updateuser';
+import Review from './components/review';
+import UpdateReview from './components/updatereview'
 
 import { SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, BackHandler, FlatList, ActivityIndicator } from 'react-native';
 
@@ -60,6 +62,8 @@ class App extends Component {
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="Details" component={LocationDetails} />
         <Stack.Screen name="Update" component={UpdateUser} />
+        <Stack.Screen name="Review" component={Review} />
+        <Stack.Screen name="Update Review" component={UpdateReview} />
       </Stack.Navigator>
     </NavigationContainer>
   );
