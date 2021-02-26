@@ -179,6 +179,9 @@ class User extends Component {
                                         <Text style={styles.title}>{item.location.location_name}</Text>  
                                     </View>
                                     <View style={styles.row}>
+                                        <Text style={styles.text}>{item.location.location_town}</Text>  
+                                    </View>
+                                    <View style={styles.row}>
                                         <Text style={styles.text}>Overall Rating: </Text>
                                         <Text style={styles.rating}>{item.review.overall_rating}/5</Text>
                                     </View>
