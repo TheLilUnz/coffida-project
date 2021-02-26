@@ -104,6 +104,8 @@ class User extends Component {
                 throw 'Failed validation';
             }else if(response.status === 401){
                 throw 'Not logged in';
+            }else if(response.status === 403){
+                throw 'Forbidden';
             }else if(response.status === 404){
                 throw 'Review not found';
             } else{
@@ -117,7 +119,9 @@ class User extends Component {
     }
 
     editReview = (locationId, reviewId) => {
-        
+        AsyncStorage.setItem('@locationId', locationId);
+        AsyncStorage.setItem('@reviewId', JSON.stringify(reviewId));
+        this.props.navigation.navigate("Update Review");
     }
 
     logout = () => {
@@ -149,6 +153,9 @@ class User extends Component {
                             <View style={styles.locationContainer}>
                                 <View style={styles.row}>
                                     <Text style={styles.title}>{item.location_name}</Text>  
+                                </View>
+                                <View style={styles.row}>
+                                    <Text style={styles.text}>{item.location_town}</Text>  
                                 </View>
                                 <View style={styles.row}>
                                     <Text style={styles.text}>Overall Rating: </Text>

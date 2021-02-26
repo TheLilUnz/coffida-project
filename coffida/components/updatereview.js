@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity, ToastAndroid, TouchableWithoutFeedbackBase } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createIconSetFromFontello } from 'react-native-vector-icons';
 
 class UpdateReview extends Component {
     constructor(props){
@@ -24,17 +25,18 @@ class UpdateReview extends Component {
         })
     }
 
-    postReview = async () => {
+    updateReview = async () => {
         console.log(this.state)
         const value = await AsyncStorage.getItem('@session_token');
-        const id = await AsyncStorage.getItem('@locationId');
+        const locationId = await AsyncStorage.getItem('@locationId');
+        const reviewId = await AsyncStorage.getItem('@reviewId');
         this.checkProfanity();
         if(this.state.review_body == "invalid"){
             ToastAndroid.show("Please keep reviews about coffee only!", ToastAndroid.SHORT);
             return false;
         }
-        return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + id + "/review", {
-            method:'post',
+        return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + locationId + "/review/" + reviewId, {
+            method:'patch',
             headers: {
                 'X-Authorization': value,
                 'Content-Type':'application/json'
@@ -42,12 +44,14 @@ class UpdateReview extends Component {
             body: JSON.stringify(this.state)
         })
         .then((response) => {
-            if(response.status === 201){
-                ToastAndroid.show("Review posted!", ToastAndroid.SHORT);
+            if(response.status === 200){
+                ToastAndroid.show("Review updated!", ToastAndroid.SHORT);
             }else if(response.status === 400){
                 throw 'Failed validation';
             }else if(response.status === 401){
                 throw 'Not logged in';
+            }else if(response.status === 403){
+                throw 'Forbidden';
             }else if(response.status === 404){
                 throw 'Location not found';
             } else{
@@ -63,7 +67,7 @@ class UpdateReview extends Component {
     render(){
         return(
             <View style={styles.container}>
-                <Text style={styles.title}>Leave a Review</Text>
+                <Text style={styles.title}>Update your Review</Text>
                 <View style={styles.row}>
                 <Text style={styles.text}>Overall Rating:</Text>
                 <TextInput 
@@ -103,8 +107,8 @@ class UpdateReview extends Component {
                 value={this.state.review_body} />
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => this.postReview()}>
-                    <Text style={styles.buttonText}>Leave Review!</Text>
+                    onPress={() => this.updateReview()}>
+                    <Text style={styles.buttonText}>Update Review!</Text>
                 </TouchableOpacity>
             </View>
         );
