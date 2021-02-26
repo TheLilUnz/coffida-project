@@ -10,6 +10,7 @@ import Locations from './components/locations';
 import User from './components/user';
 import Login from './components/login';
 import Signup from './components/signup';
+import LocationDetails from './components/locationdetails';
 
 import { SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, BackHandler, FlatList, ActivityIndicator } from 'react-native';
 
@@ -56,6 +57,7 @@ class App extends Component {
         <Stack.Screen name="Home" component={HomeTabs} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="Details" component={LocationDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );

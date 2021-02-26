@@ -1,21 +1,24 @@
 import React, {Component} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ToastAndroid } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { roundToNearestPixel } from 'react-native/Libraries/Utilities/PixelRatio';
 
-class Locations extends Component {
+class LocationDetails extends Component {
     constructor(props){
         super(props);
 
-        this.state = {
+        this.state={
+            locationId: props.route.params,
             isLoading: true,
             listData: []
         }
+        console.log("Received " + this.state.locationId); // debugging
     }
 
     componentDidMount() {
         this.unsubscribe = this.props.navigation.addListener('focus', () => {
             this.checkLoggedIn();
-            this.getData();
+            this.getLocationDetails();
         });
     }
     
@@ -30,13 +33,11 @@ class Locations extends Component {
         }
     }
 
-    getData = async () => {
+    getLocationDetails = async () => {
         const value = await AsyncStorage.getItem('@session_token');
-        return fetch("http://10.0.2.2:3333/api/1.0.0/find", {
+        const locationId = this.state.locationId;
+        return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + locationId, {
             method:'get',
-            'headers': {
-                'X-Authorization': value
-            }
         })
         .then((response) => {
             if(response.status === 200){
@@ -51,7 +52,7 @@ class Locations extends Component {
         .then((responseJson) => {
             this.setState({
                 isLoading: false,
-                listData: responseJson
+                listData: responseJson,
             })
         })
         .catch((error) => {
@@ -60,43 +61,53 @@ class Locations extends Component {
         })
     }
 
-    viewLocationDetails = (locationId) => {
-        console.log("viewing " + locationId);
-        this.props.navigation.navigate("Details", locationId);
-    }
-
     render(){
         if(this.state.isLoading){
             return(
             <View style={styles.container}>
-                <Text style={styles.text}>Loading Locations...</Text>
+                <Text style={styles.text}>Loading Details...</Text>
             </View>
             )
         }else{
             return(
                 <View style={styles.container}>
-                    <FlatList
-                        data={this.state.listData}
-                        renderItem={({item}) => (
-                            <TouchableOpacity style={styles.locationContainer}
-                            onPress={() => this.viewLocationDetails(item.location_id)}>
-                            <Text style={styles.title}>{item.location_name} </Text>
-                            <Text style={styles.rating}>{item.avg_overall_rating}/5</Text>
-                            <Text style={styles.text}>{item.location_town}</Text>
-                            </TouchableOpacity>
-                        )}></FlatList>
+                    <Text style={styles.title}>{this.state.listData.location_name}</Text>
+                    <View style={styles.row}>
+                        <Text style={styles.text}>Town: </Text>
+                        <Text style={styles.rating}>{this.state.listData.location_town}</Text>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={styles.text}>Average Overall Rating: </Text>
+                        <Text style={styles.rating}>{this.state.listData.avg_overall_rating}/5</Text>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={styles.text}>Average Price Rating: </Text>
+                        <Text style={styles.rating}>{this.state.listData.avg_price_rating}/5</Text>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={styles.text}>Average Quality Rating: </Text>
+                        <Text style={styles.rating}>{this.state.listData.avg_quality_rating}/5</Text>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={styles.text}>Average Cleanliness Rating: </Text>
+                        <Text style={styles.rating}>{this.state.listData.avg_clenliness_rating}/5</Text>
+                    </View>
                 </View>
             );
         }
-    }
+    } 
 }
 
 const styles = StyleSheet.create({
     container:{
         flex: 1,
+        flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         backgroundColor: 'wheat'
+    },
+    row:{
+        flexDirection: 'row'
     },
     locationContainer:{
         width:300,
@@ -137,4 +148,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Locations;
+export default LocationDetails;
