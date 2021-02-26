@@ -15,32 +15,40 @@ class Signup extends Component {
     }
 
     signup = () => {
-        // Validate dis shit
-
-        return fetch("http://10.0.2.2:3333/api/1.0.0/user", {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.state)
-        })
-        .then((response) => {
-            if(response.status === 201){
-                return response.json()
-            }else if(response.status === 400){
-                throw 'Failed validation';
-            }else{
-                throw 'Something went wrong';
-            }
-        })
-        .then(async (responseJson) => {
-            console.log("User created with ID: ", responseJson);
-            this.props.navigation.navigate("Login");
-        })
-        .catch((error) => {
-            console.log(error);
-            ToastAndroid.show(error, ToastAndroid.SHORT);
-        })
+        const regName = /^[ a-zA-Z\-\’]+$/;
+        const regEmail = /\S+@\S+\.\S+/;
+        if(!regName.test(this.state.first_name)){
+            ToastAndroid.show("Invalid First Name", ToastAndroid.SHORT);
+        }else if(!regName.test(this.state.last_name)){
+            ToastAndroid.show("Invalid Last Name", ToastAndroid.SHORT);
+        }else if(!regEmail.test(this.state.email)){
+            ToastAndroid.show("Invalid Email", ToastAndroid.SHORT);
+        }else{
+            return fetch("http://10.0.2.2:3333/api/1.0.0/user", {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.state)
+            })
+            .then((response) => {
+                if(response.status === 201){
+                    return response.json()
+                }else if(response.status === 400){
+                    throw 'Failed validation';
+                }else{
+                    throw 'Something went wrong';
+                }
+            })
+            .then(async (responseJson) => {
+                console.log("User created with ID: ", responseJson);
+                this.props.navigation.navigate("Login");
+            })
+            .catch((error) => {
+                console.log(error);
+                ToastAndroid.show(error, ToastAndroid.SHORT);
+            })
+        }
     }
 
     render(){

@@ -14,34 +14,37 @@ class Login extends Component {
     }
 
     login = async () => {
-        //validate dis shit too
-
-        return fetch("http://10.0.2.2:3333/api/1.0.0/user/login", {
-            method:'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.state)
-        })
-        .then((response) => {
-            if(response.status === 200){
-                return response.json()
-            }else if(response.status === 400){
-                throw 'Invalid email or password';
-            }else{
-                throw 'Something went wrong';
-            }
-        })
-        .then(async (responseJson) => {
-            console.log(responseJson);
-            await AsyncStorage.setItem('@session_token', responseJson.token);
-            await AsyncStorage.setItem('@user_id', JSON.stringify(responseJson.id));
-            this.props.navigation.navigate("Home");
-        })
-        .catch((error) => {
-            console.log(error);
-            ToastAndroid.show(error, ToastAndroid.SHORT);
-        })
+        const regEmail = /\S+@\S+\.\S+/;
+        if(!regEmail.test(this.state.email)){
+            ToastAndroid.show("Invalid Email", ToastAndroid.SHORT);
+        }else{
+            return fetch("http://10.0.2.2:3333/api/1.0.0/user/login", {
+                method:'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.state)
+            })
+            .then((response) => {
+                if(response.status === 200){
+                    return response.json()
+                }else if(response.status === 400){
+                    throw 'Invalid email or password';
+                }else{
+                    throw 'Something went wrong';
+                }
+            })
+            .then(async (responseJson) => {
+                console.log(responseJson);
+                await AsyncStorage.setItem('@session_token', responseJson.token);
+                await AsyncStorage.setItem('@user_id', JSON.stringify(responseJson.id));
+                this.props.navigation.navigate("Home");
+            })
+            .catch((error) => {
+                console.log(error);
+                ToastAndroid.show(error, ToastAndroid.SHORT);
+            })
+        }
     }
 
     render(){

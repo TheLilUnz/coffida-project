@@ -15,37 +15,46 @@ class UpdateUser extends Component {
     }
 
     updateUserInfo = async () => {
-        // Validate
         const value = await AsyncStorage.getItem('@session_token');
         const id = await AsyncStorage.getItem('@user_id');
     
-        return fetch("http://10.0.2.2:3333/api/1.0.0/user/" + id, {
-            method: 'patch',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Authorization' : value
-            },
-            body: JSON.stringify(this.state)
-        })
-        .then((response) => {
-            if(response.status === 200){
-                ToastAndroid.show("Account updated!", ToastAndroid.SHORT)
-            }else if(response.status === 400){
-                throw 'Failed validation';
-            }else if(response.status === 401){
-                throw 'Not logged in';
-            }else if(response.status === 403){
-                throw 'Forbidden'
-            }else if(response.status === 404){
-                throw 'Account not found';
-            } else{
-                throw 'Something went wrong';
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            ToastAndroid.show(error, ToastAndroid.SHORT);
-        })
+        const regName = /^[ a-zA-Z\-\’]+$/;
+        const regEmail = /\S+@\S+\.\S+/;
+        if(!regName.test(this.state.first_name)){
+            ToastAndroid.show("Invalid First Name", ToastAndroid.SHORT);
+        }else if(!regName.test(this.state.last_name)){
+            ToastAndroid.show("Invalid Last Name", ToastAndroid.SHORT);
+        }else if(!regEmail.test(this.state.email)){
+            ToastAndroid.show("Invalid Email", ToastAndroid.SHORT);
+        }else{
+            return fetch("http://10.0.2.2:3333/api/1.0.0/user/" + id, {
+                method: 'patch',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Authorization' : value
+                },
+                body: JSON.stringify(this.state)
+            })
+            .then((response) => {
+                if(response.status === 200){
+                    ToastAndroid.show("Account updated!", ToastAndroid.SHORT)
+                }else if(response.status === 400){
+                    throw 'Failed validation';
+                }else if(response.status === 401){
+                    throw 'Not logged in';
+                }else if(response.status === 403){
+                    throw 'Forbidden'
+                }else if(response.status === 404){
+                    throw 'Account not found';
+                } else{
+                    throw 'Something went wrong';
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                ToastAndroid.show(error, ToastAndroid.SHORT);
+            })
+        }
     }
 
     render(){

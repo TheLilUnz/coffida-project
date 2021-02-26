@@ -33,9 +33,8 @@ class UpdateReview extends Component {
         this.checkProfanity();
         if(this.state.review_body == "invalid"){
             ToastAndroid.show("Please keep reviews about coffee only!", ToastAndroid.SHORT);
-            return false;
-        }
-        return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + locationId + "/review/" + reviewId, {
+        }else{
+            return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + locationId + "/review/" + reviewId, {
             method:'patch',
             headers: {
                 'X-Authorization': value,
@@ -62,6 +61,7 @@ class UpdateReview extends Component {
             console.log(error);
             ToastAndroid.show(error, ToastAndroid.SHORT);
         })
+        }
     }
     
     render(){

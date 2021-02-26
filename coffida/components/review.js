@@ -31,33 +31,33 @@ class Review extends Component {
         this.checkProfanity();
         if(this.state.review_body == "invalid"){
             ToastAndroid.show("Please keep reviews about coffee only!", ToastAndroid.SHORT);
-            return false;
+        }else{
+            return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + id + "/review", {
+                method:'post',
+                headers: {
+                    'X-Authorization': value,
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify(this.state)
+            })
+            .then((response) => {
+                if(response.status === 201){
+                    ToastAndroid.show("Review posted!", ToastAndroid.SHORT);
+                }else if(response.status === 400){
+                    throw 'Failed validation';
+                }else if(response.status === 401){
+                    throw 'Not logged in';
+                }else if(response.status === 404){
+                    throw 'Location not found';
+                } else{
+                    throw 'Something went wrong';
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                ToastAndroid.show(error, ToastAndroid.SHORT);
+            })
         }
-        return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + id + "/review", {
-            method:'post',
-            headers: {
-                'X-Authorization': value,
-                'Content-Type':'application/json'
-            },
-            body: JSON.stringify(this.state)
-        })
-        .then((response) => {
-            if(response.status === 201){
-                ToastAndroid.show("Review posted!", ToastAndroid.SHORT);
-            }else if(response.status === 400){
-                throw 'Failed validation';
-            }else if(response.status === 401){
-                throw 'Not logged in';
-            }else if(response.status === 404){
-                throw 'Location not found';
-            } else{
-                throw 'Something went wrong';
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            ToastAndroid.show(error, ToastAndroid.SHORT);
-        })
     }
     
     render(){
