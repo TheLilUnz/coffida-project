@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ToastAndroid } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ToastAndroid, TouchableWithoutFeedbackBase } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { roundToNearestPixel } from 'react-native/Libraries/Utilities/PixelRatio';
 
@@ -54,12 +54,17 @@ class LocationDetails extends Component {
                 isLoading: false,
                 listData: responseJson,
             })
+            //this.getReviews(this.state.listData);
         })
         .catch((error) => {
             console.log(error);
             ToastAndroid.show(error, ToastAndroid.SHORT)
         })
     }
+
+    // getReviews = (listData) => {
+        
+    // }
 
     render(){
         if(this.state.isLoading){

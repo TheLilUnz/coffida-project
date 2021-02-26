@@ -88,6 +88,11 @@ class User extends Component {
                 onPress={() => this.logout()}>
                     <Text>Log out</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                style={styles.button}
+                onPress={() => this.props.navigation.navigate("Update")}>
+                    <Text>Edit Account</Text>
+                </TouchableOpacity>
             </View>
              )
          }
